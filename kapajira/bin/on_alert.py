@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 This script is intended to be invoked by kapacitor `exec` node.
 It creates JIRA issue based on data passed in to STDIN from AlertNode.
