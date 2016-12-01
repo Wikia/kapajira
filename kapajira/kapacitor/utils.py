@@ -3,8 +3,8 @@ from collections import abc
 
 
 class AlertDataParser:
-    @classmethod
-    def parse(cls, alert_data):
+    @staticmethod
+    def parse(alert_data):
         alert_dict = json.loads(alert_data)
         return AlertData(alert_dict)
 

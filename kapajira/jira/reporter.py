@@ -55,7 +55,7 @@ class JiraReporter:
             'project': self._project,
             'summary': issue.get_summary(),
             'description': issue.get_description(),
-            "issuetype": issue.get_issue_type()
+            'issuetype': issue.get_issue_type()
         }
 
         return self._jira.create_issue(fields=issue_dict)
