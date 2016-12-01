@@ -1,4 +1,6 @@
 import json
+import keyword
+
 from collections import abc
 
 
@@ -14,21 +16,26 @@ class AlertData:
         using attribute notation
     """
 
+    def __new__(cls, arg):
+        if isinstance(arg, abc.Mapping):
+            return super().__new__(cls)
+        elif isinstance(arg, abc.MutableSequence):
+            return [cls(item) for item in arg]
+        else:
+            return arg
+
     def __init__(self, mapping):
-        self._data = dict(mapping)
+        self.__dict__['_data'] = {}
+        for key, value in mapping.items():
+            if keyword.iskeyword(key):
+                key += '_'
+            self._data[key] = value
 
     def __getattr__(self, name):
         if hasattr(self._data, name):
             return getattr(self._data, name)
         else:
-            return AlertData.build(self._data[name])
+            return AlertData(self._data[name])
 
-    @classmethod
-    def build(cls, obj):
-        if isinstance(obj, abc.Mapping):
-            return cls(obj)
-
-        elif isinstance(obj, abc.MutableSequence):
-            return [cls.build(item) for item in obj]
-        else:
-            return obj
+    def __setattr__(self, key, value):
+        raise AttributeError('Attributes are read only')
