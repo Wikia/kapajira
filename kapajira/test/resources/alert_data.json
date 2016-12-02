@@ -1,0 +1,34 @@
+{
+   "id":"HTTP_RESPONSE_TIME_HARD_SLA/resources/app=alerting-tester,dc=poz-dev,mesos_task_id=dev_com.wikia_alerting-tester.2a30b0e6-b25f-11e6-8f8c-0242dab7573c,metricName=com.wikia.alerting.tester.service.resources.AlertTestingResource.testingRequest",
+   "message":"HTTP_RESPONSE_TIME_HARD_SLA poz-dev/alerting-tester\n        50th percentile of response time was above 2000ms for 4 minutes in last 5 minutes.\n        https://metrics.wikia-inc.com/dashboard/db/services-resource-stats?var-endpoint=com.wikia.alerting.tester.service.resources.AlertTestingResource.testingRequest\u0026var-app=alerting-tester\u0026var-dc=poz-dev\n        ",
+
+   "details":"{\u0026#34;Name\u0026#34;:\u0026#34;resources\u0026#34;,\u0026#34;TaskName\u0026#34;:\u0026#34;jira_task\u0026#34;,\u0026#34;Group\u0026#34;:\u0026#34;app=alerting-tester,dc=poz-dev,mesos_task_id=dev_com.wikia_alerting-tester.2a30b0e6-b25f-11e6-8f8c-0242dab7573c,metricName=com.wikia.alerting.tester.service.resources.AlertTestingResource.testingRequest\u0026#34;,\u0026#34;Tags\u0026#34;:{\u0026#34;app\u0026#34;:\u0026#34;alerting-tester\u0026#34;,\u0026#34;dc\u0026#34;:\u0026#34;poz-dev\u0026#34;,\u0026#34;mesos_task_id\u0026#34;:\u0026#34;dev_com.wikia_alerting-tester.2a30b0e6-b25f-11e6-8f8c-0242dab7573c\u0026#34;,\u0026#34;metricName\u0026#34;:\u0026#34;com.wikia.alerting.tester.service.resources.AlertTestingResource.testingRequest\u0026#34;},\u0026#34;ID\u0026#34;:\u0026#34;HTTP_RESPONSE_TIME_HARD_SLA/resources/app=alerting-tester,dc=poz-dev,mesos_task_id=dev_com.wikia_alerting-tester.2a30b0e6-b25f-11e6-8f8c-0242dab7573c,metricName=com.wikia.alerting.tester.service.resources.AlertTestingResource.testingRequest\u0026#34;,\u0026#34;Fields\u0026#34;:{\u0026#34;count\u0026#34;:4},\u0026#34;Level\u0026#34;:\u0026#34;CRITICAL\u0026#34;,\u0026#34;Time\u0026#34;:\u0026#34;2016-11-28T10:24:00Z\u0026#34;,\u0026#34;Message\u0026#34;:\u0026#34;HTTP_RESPONSE_TIME_HARD_SLA poz-dev/alerting-tester\\n        50th percentile of response time was above 2000ms for 4 minutes in last 5 minutes.\\n        https://metrics.wikia-inc.com/dashboard/db/services-resource-stats?var-endpoint=com.wikia.alerting.tester.service.resources.AlertTestingResource.testingRequest\\u0026var-app=alerting-tester\\u0026var-dc=poz-dev\\n        \u0026#34;}\n",
+   
+   "time":"2016-11-28T10:24:00Z",
+   "duration":420000000000,
+   "level":"CRITICAL",
+   "class":"DEFECT",
+   "data":{
+      "series":[
+         {
+            "name":"resources",
+            "tags":{
+               "app":"alerting-tester",
+               "dc":"poz-dev",
+               "mesos_task_id":"dev_com.wikia_alerting-tester.2a30b0e6-b25f-11e6-8f8c-0242dab7573c",
+               "metricName":"com.wikia.alerting.tester.service.resources.AlertTestingResource.testingRequest"
+            },
+            "columns":[
+               "time",
+               "count"
+            ],
+            "values":[
+               [
+                  "2016-11-28T10:24:00Z",
+                  4
+               ]
+            ]
+         }
+      ]
+   }
+}
