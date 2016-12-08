@@ -6,7 +6,7 @@ class Issue:
 
     DESCRIPTION_HASH_FORMAT = '\n\n========================\nHash: {hash}'
 
-    def __init__(self, summary, description, issue_type='Bug', issue_component=None):
+    def __init__(self, summary, description, issue_type='Defect', issue_component=None):
         """ Set up the jira issue """
         self._summary = summary
         self._description = description
