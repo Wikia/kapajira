@@ -6,7 +6,7 @@ from kapajira.jira.issues import Issue
 
 
 class TestJiraReporter(unittest.TestCase):
-    JIRA_SEARCH_STRING = "description ~ 'hash' AND status = 'Open'"
+    JIRA_SEARCH_STRING = "description ~ 'hash' AND status != 'Closed'"
 
     @patch('kapajira.jira.reporter.JIRA')
     def test_issue_exist_if_it_is_found(self, jira_mock):
