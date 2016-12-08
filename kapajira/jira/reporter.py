@@ -73,7 +73,6 @@ class JiraReporter:
 
     def _component_exists(self, component_name: str) -> bool:
         components_for_project = self._jira.project_components(project=self._project)
-        print(components_for_project)
         for x in components_for_project:
             if component_name == x.name:
                 return True
