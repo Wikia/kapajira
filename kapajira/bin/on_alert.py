@@ -8,9 +8,11 @@ from kapajira.jira.reporter import JiraReporter
 from kapajira.jira.issues import Issue
 from kapajira.kapacitor.utils import AlertDataParser
 
-alert_data = AlertDataParser.parse(sys.stdin.read())
 
+issue_component = sys.argv[1] if len(sys.argv) > 1 else None;
+
+alert_data = AlertDataParser.parse(sys.stdin.read())
 if alert_data.level == 'CRITICAL':
-    issue = Issue(alert_data.id, alert_data.message)
+    issue = Issue(alert_data.id, alert_data.message, issue_component=issue_component)
     reporter = JiraReporter()
     reporter.create_issue(issue)

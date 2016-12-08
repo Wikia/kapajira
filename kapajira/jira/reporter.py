@@ -58,6 +58,10 @@ class JiraReporter:
             'issuetype': issue.get_issue_type()
         }
 
+        if issue.get_component() is not None:
+            issue_dict['components'] = [{'name': issue.get_component()}]
+
+        print(issue_dict)
         return self._jira.create_issue(fields=issue_dict)
 
     def _search_for_issues(self, issue_hash, status):
