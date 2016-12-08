@@ -58,6 +58,9 @@ class JiraReporter:
             'issuetype': issue.get_issue_type()
         }
 
+        if issue.get_component() is not None and self._component_exists(issue.get_component()):
+            issue_dict['components'] = [{'name': issue.get_component()}]
+
         return self._jira.create_issue(fields=issue_dict)
 
     def _search_for_issues(self, issue_hash, status):
@@ -67,3 +70,10 @@ class JiraReporter:
         )
 
         return self._jira.search_issues(jql_query)
+
+    def _component_exists(self, component_name: str) -> bool:
+        components_for_project = self._jira.project_components(project=self._project)
+        for x in components_for_project:
+            if component_name == x.name:
+                return True
+        return False

@@ -6,13 +6,14 @@ class Issue:
 
     DESCRIPTION_HASH_FORMAT = '\n\n========================\nHash: {hash}'
 
-    def __init__(self, summary, description, issue_type='Defect'):
+    def __init__(self, summary, description, issue_type='Defect', issue_component=None):
         """ Set up the jira issue """
         self._summary = summary
         self._description = description
         self._issue_type = {
             'name': issue_type
         }
+        self._issue_component = issue_component
         self._issue_hash = self._create_hash(summary)
 
     @staticmethod
@@ -40,3 +41,6 @@ class Issue:
         description = self._description.strip()
         description += self.DESCRIPTION_HASH_FORMAT.format(hash=self._issue_hash)
         return description
+
+    def get_component(self):
+        return self._issue_component
