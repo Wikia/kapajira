@@ -6,7 +6,7 @@ from kapajira.config import JIRA_CONFIG as CFG
 class JiraReporter:
     """Main interface for creating and searching issues on JIRA"""
 
-    JQL_OPEN_STATUS = "status = '{status}'"
+    JQL_NOT_IN_STATUS = "status != '{status}'"
     JQL_DESCRIPTION_CONTAINS = "description ~ '{hash_value}'"
 
     STATUS_CLOSED = 'Closed'
@@ -27,11 +27,11 @@ class JiraReporter:
             issue_hash: hash that will be searched in JIRA description field
 
         Returns:
-            True if there is at least one JIRA issue which is 'Open'
+            True if there is at least one JIRA issue which is not in status 'Closed'
             and contains issue_hash, False otherwise
 
         """
-        issues = self._search_for_issues(issue_hash, self.STATUS_OPEN)
+        issues = self._search_for_issues(issue_hash, self.STATUS_CLOSED)
 
         return True if issues else False
 
@@ -63,7 +63,7 @@ class JiraReporter:
     def _search_for_issues(self, issue_hash, status):
         jql_query = ' AND '.join([
             self.JQL_DESCRIPTION_CONTAINS.format(hash_value=issue_hash),
-            self.JQL_OPEN_STATUS.format(status=status)]
+            self.JQL_NOT_IN_STATUS.format(status=status)]
         )
 
         return self._jira.search_issues(jql_query)
