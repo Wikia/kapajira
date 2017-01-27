@@ -63,7 +63,7 @@ class JiraReporter:
             issue_dict['components'] = [{'name': issue.get_component()}]
 
         if existing_issue:
-            existing_issue.update(fields={'description' : issue_dict['description']})
+            existing_issue.update(fields={'description': issue_dict['description']})
         else:
             self._jira.create_issue(fields=issue_dict)
 
