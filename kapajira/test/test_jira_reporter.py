@@ -37,14 +37,18 @@ class TestJiraReporter(unittest.TestCase):
         issue_mock.get_description.return_value = 'some_desc'
         issue_mock.get_issue_hash.return_value = 'some_hash'
 
-        self.assertIsNotNone(jp.create_issue(issue_mock))
+        jp.create_issue(issue_mock)
 
     @patch('kapajira.jira.reporter.JIRA')
     def test_issue_is_not_created_if_one_exist(self, jira_mock):
+        jira_issue_mock = Mock()
+
         jira_mock = jira_mock.return_value
-        jira_mock.search_issues.return_value = ['some_issue']
+        jira_mock.search_issues.return_value = [jira_issue_mock]
 
         jp = JiraReporter()
         issue_mock = Mock(spec=Issue)
+        issue_mock.get_description.return_value = 'some_desc'
 
-        self.assertIsNone(jp.create_issue(issue_mock))
+        jp.create_issue(issue_mock)
+        jira_issue_mock.update.assert_called_once_with(fields={'description': 'some_desc'})

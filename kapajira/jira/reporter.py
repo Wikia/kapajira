@@ -17,7 +17,7 @@ class JiraReporter:
         self._jira = JIRA(server=CFG['url'],
                           basic_auth=(CFG['user'], CFG['password']))
 
-    def issue_exists(self, issue_hash: str) -> list:
+    def issue_exists(self, issue_hash: str):
         """Checks if JIRA issues with issue_hash in description exists.
 
         Searches for 'Open' JIRA issues which contains issue_hash in their
@@ -27,41 +27,45 @@ class JiraReporter:
             issue_hash: hash that will be searched in JIRA description field
 
         Returns:
-            True if there is at least one JIRA issue which is not in status 'Closed'
-            and contains issue_hash, False otherwise
+            first JIRA issue which is not in status 'Closed'
+            and contains issue_hash or None
 
         """
         issues = self._search_for_issues(issue_hash, self.STATUS_CLOSED)
 
-        return True if issues else False
+        if issues:
+            return issues[0]
+        else:
+            return None
+
 
     def create_issue(self, issue):
-        """Creates an JIRA issue
+        """Creates an JIRA issue or updates and existing one
 
         Creates JIRA issue at project taken from configuration file.
 
         Args:
             issue: an instance of kapajira.jira.Issue class
 
-        Returns:
-            None if no issue was created. Otherwise return new issue id
-
         """
 
-        if self.issue_exists(issue.get_issue_hash()):
-            return
+        existing_issue = self.issue_exists(issue.get_issue_hash())
 
         issue_dict = {
             'project': self._project,
             'summary': issue.get_summary(),
             'description': issue.get_description(),
-            'issuetype': issue.get_issue_type()
+            'issuetype': issue.get_issue_type(),
+            'labels': issue.get_labels()
         }
 
         if issue.get_component() is not None and self._component_exists(issue.get_component()):
             issue_dict['components'] = [{'name': issue.get_component()}]
 
-        return self._jira.create_issue(fields=issue_dict)
+        if existing_issue:
+            existing_issue.update(fields={'description' : issue_dict['description']})
+        else:
+            self._jira.create_issue(fields=issue_dict)
 
     def _search_for_issues(self, issue_hash, status):
         jql_query = ' AND '.join([
