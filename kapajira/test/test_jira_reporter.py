@@ -22,7 +22,7 @@ class TestJiraReporter(unittest.TestCase):
         jira_mock.search_issues.return_value = ['some_issue']
         jp = JiraReporter()
 
-        self.assertTrue(jp.issue_exists('hash'))
+        self.assertTrue(jp.existing_issue('hash'))
         jira_mock.search_issues.assert_called_once_with(self.JIRA_SEARCH_STRING)
 
     @patch('kapajira.jira.reporter.JIRA')
@@ -31,7 +31,7 @@ class TestJiraReporter(unittest.TestCase):
         jira_mock.search_issues.return_value = []
         jp = JiraReporter()
 
-        self.assertFalse(jp.issue_exists('hash'))
+        self.assertFalse(jp.existing_issue('hash'))
         jira_mock.search_issues.assert_called_once_with(self.JIRA_SEARCH_STRING)
 
     @patch('kapajira.jira.reporter.JIRA')
@@ -51,7 +51,7 @@ class TestJiraReporter(unittest.TestCase):
         issue_mock.get_issue_type.return_value = 'some_issuetype'
         issue_mock.get_labels.return_value = ['some_label']
 
-        jp.create_issue(issue_mock)
+        jp.create_or_update_issue(issue_mock)
         jira_mock.create_issue.assert_called_once_with(fields={
             'project': 'some_project',
             'summary': 'some_summary',
@@ -71,5 +71,5 @@ class TestJiraReporter(unittest.TestCase):
         issue_mock = Mock(spec=Issue)
         issue_mock.get_description.return_value = 'some_desc'
 
-        jp.create_issue(issue_mock)
+        jp.create_or_update_issue(issue_mock)
         jira_issue_mock.update.assert_called_once_with(fields={'description': 'some_desc'})

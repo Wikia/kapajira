@@ -15,4 +15,4 @@ alert_data = AlertDataParser.parse(sys.stdin.read())
 if alert_data.level == 'CRITICAL':
     issue = Issue(alert_data.id, alert_data.message, issue_component=issue_component)
     reporter = JiraReporter()
-    reporter.create_issue(issue)
+    reporter.create_or_update_issue(issue)

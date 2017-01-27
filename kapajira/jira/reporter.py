@@ -17,7 +17,7 @@ class JiraReporter:
         self._jira = JIRA(server=CFG['url'],
                           basic_auth=(CFG['user'], CFG['password']))
 
-    def issue_exists(self, issue_hash: str):
+    def existing_issue(self, issue_hash: str):
         """Checks if JIRA issues with issue_hash in description exists.
 
         Searches for 'Open' JIRA issues which contains issue_hash in their
@@ -39,7 +39,7 @@ class JiraReporter:
             return None
 
 
-    def create_issue(self, issue):
+    def create_or_update_issue(self, issue):
         """Creates an JIRA issue or updates and existing one
 
         Creates JIRA issue at project taken from configuration file.
@@ -49,7 +49,7 @@ class JiraReporter:
 
         """
 
-        existing_issue = self.issue_exists(issue.get_issue_hash())
+        existing_issue = self.existing_issue(issue.get_issue_hash())
 
         issue_dict = {
             'project': self._project,
@@ -62,7 +62,7 @@ class JiraReporter:
         if issue.get_component() is not None and self._component_exists(issue.get_component()):
             issue_dict['components'] = [{'name': issue.get_component()}]
 
-        if existing_issue:
+        if existing_issue is not None:
             existing_issue.update(fields={'description': issue_dict['description']})
         else:
             self._jira.create_issue(fields=issue_dict)
