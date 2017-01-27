@@ -31,7 +31,7 @@ class TestJiraReporter(unittest.TestCase):
         jira_mock.search_issues.return_value = []
         jp = JiraReporter()
 
-        self.assertFalse(jp.existing_issue('hash'))
+        self.assertIsNone(jp.existing_issue('hash'))
         jira_mock.search_issues.assert_called_once_with(self.JIRA_SEARCH_STRING)
 
     @patch('kapajira.jira.reporter.JIRA')
