@@ -33,7 +33,7 @@ class JiraReporter:
         """
         issues = self._search_for_issues(issue_hash, self.STATUS_CLOSED)
 
-        if issues is not None:
+        if issues:
             return issues[0]
         else:
             return None
@@ -62,7 +62,7 @@ class JiraReporter:
         if issue.get_component() is not None and self._component_exists(issue.get_component()):
             issue_dict['components'] = [{'name': issue.get_component()}]
 
-        if existing_issue is not None:
+        if existing_issue:
             existing_issue.update(fields={'description' : issue_dict['description']})
         else:
             self._jira.create_issue(fields=issue_dict)
