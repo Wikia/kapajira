@@ -7,15 +7,16 @@ class Issue:
     DESCRIPTION_HASH_FORMAT = '\n\n========================\nHash: {hash}'
     LAST_OCCURRENCE_FORMAT = '\nLast Occurrence: {occurrence} UTC'
 
-    def __init__(self, summary, description, issue_type='Defect', issue_component=None):
+    def __init__(self, alert_id, description, issue_type='Defect', issue_component=None, alert_name=None):
         """ Set up the jira issue """
-        self._summary = summary
+        self.alert_id = alert_id
         self._description = description
         self._issue_type = {
             'name': issue_type
         }
         self._issue_component = issue_component
-        self._issue_hash = self._create_hash(summary)
+        self._alert_name = alert_name
+        self._issue_hash = self._create_hash(get_summary())
 
     @staticmethod
     def _create_hash(data_to_hash):
@@ -33,9 +34,15 @@ class Issue:
 
     def get_summary(self):
         """ Get issue summary """
-        # prevent jira.exceptions.JIRAError:
-        # HTTP 400: "The summary is invalid because it contains newline characters."
-        return ("Kap Alert: " + self._summary.replace("\n", ''))[:255]
+        if issue_component and alert_name:
+          summary = self._alert_name + "/" + self._issue_component
+        else:
+          # prevent jira.exceptions.JIRAError:        
+          # HTTP 400: "The summary is invalid because it contains newline characters."
+          summary = self._alert_id.replace("\n", '')
+          
+        #Max length of summary 255 characters
+        return ("Kap Alert: " + summary)[:255]
 
     def get_description(self):
         """ Get report detailed description """
