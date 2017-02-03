@@ -9,14 +9,14 @@ class Issue:
 
     def __init__(self, alert_id, description, issue_type='Defect', issue_component=None, alert_name=None):
         """ Set up the jira issue """
-        self.alert_id = alert_id
+        self._alert_id = alert_id
         self._description = description
         self._issue_type = {
             'name': issue_type
         }
         self._issue_component = issue_component
         self._alert_name = alert_name
-        self._issue_hash = self._create_hash(get_summary())
+        self._issue_hash = self._create_hash(self.get_summary())
 
     @staticmethod
     def _create_hash(data_to_hash):
@@ -34,7 +34,7 @@ class Issue:
 
     def get_summary(self):
         """ Get issue summary """
-        if issue_component and alert_name:
+        if self._issue_component and self._alert_name:
           summary = self._alert_name + "/" + self._issue_component
         else:
           # prevent jira.exceptions.JIRAError:        
