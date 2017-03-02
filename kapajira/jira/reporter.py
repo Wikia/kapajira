@@ -13,7 +13,7 @@ class JiraReporter:
     STATUS_OPEN = 'Open'
 
     def __init__(self):
-        self._project = CFG['project']
+        self._projects = CFG['projects']
         self._jira = JIRA(server=CFG['url'],
                           basic_auth=(CFG['user'], CFG['password']))
 
@@ -52,15 +52,19 @@ class JiraReporter:
         existing_issue = self.existing_issue(issue.get_issue_hash())
 
         issue_dict = {
-            'project': self._project,
+            'project': self._projects[0],
             'summary': issue.get_summary(),
             'description': issue.get_description(),
             'issuetype': issue.get_issue_type(),
             'labels': issue.get_labels()
         }
 
-        if issue.get_component() is not None and self._component_exists(issue.get_component()):
-            issue_dict['components'] = [{'name': issue.get_component()}]
+        if issue.get_component() is not None:
+            for project in self._projects:
+                if self._component_exists(issue.get_component(), project):
+                    issue_dict['project'] = project
+                    issue_dict['components'] = [{'name': issue.get_component()}]
+                    break
 
         if existing_issue is not None:
             existing_issue.update(fields={'description': issue_dict['description']})
@@ -75,8 +79,8 @@ class JiraReporter:
 
         return self._jira.search_issues(jql_query)
 
-    def _component_exists(self, component_name: str) -> bool:
-        components_for_project = self._jira.project_components(project=self._project)
+    def _component_exists(self, component_name: str, project: str) -> bool:
+        components_for_project = self._jira.project_components(project=project)
         for x in components_for_project:
             if component_name == x.name:
                 return True
