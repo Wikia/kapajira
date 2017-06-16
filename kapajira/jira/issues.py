@@ -1,5 +1,7 @@
 import hashlib
+
 from datetime import datetime
+
 
 class Issue:
     """This class is a simple wrapper for JIRA issue"""
@@ -7,7 +9,7 @@ class Issue:
     DESCRIPTION_HASH_FORMAT = '\n\n========================\nHash: {hash}'
     LAST_OCCURRENCE_FORMAT = '\nLast Occurrence: {occurrence} UTC'
 
-    def __init__(self, alert_id, description, issue_type='Defect', issue_component=None, alert_name=None):
+    def __init__(self, alert_id, description, issue_type='Defect', issue_component=None, alert_name=None, labels=None):
         """ Set up the jira issue """
         self._alert_id = alert_id
         self._description = description
@@ -17,6 +19,9 @@ class Issue:
         self._issue_component = issue_component
         self._alert_name = alert_name
         self._issue_hash = self._create_hash(self.get_summary())
+        self._labels = ["KapacitorAlert"]
+        if labels is not None:
+            self._labels += labels
 
     @staticmethod
     def _create_hash(data_to_hash):
@@ -35,13 +40,13 @@ class Issue:
     def get_summary(self):
         """ Get issue summary """
         if self._issue_component and self._alert_name:
-          summary = self._alert_name + "/" + self._issue_component
+            summary = self._alert_name + "/" + self._issue_component
         else:
-          # prevent jira.exceptions.JIRAError:        
-          # HTTP 400: "The summary is invalid because it contains newline characters."
-          summary = self._alert_id.replace("\n", '')
-          
-        #Max length of summary 255 characters
+            # prevent jira.exceptions.JIRAError:
+            # HTTP 400: "The summary is invalid because it contains newline characters."
+            summary = self._alert_id.replace("\n", '')
+
+        # Max length of summary 255 characters
         return ("Kap Alert: " + summary)[:255]
 
     def get_description(self):
@@ -53,7 +58,7 @@ class Issue:
 
     def get_labels(self):
         """ Get a list of labels """
-        return ["KapacitorAlert"]
+        return self._labels
 
     def get_component(self):
         return self._issue_component
