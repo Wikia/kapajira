@@ -9,7 +9,8 @@ class Issue:
     DESCRIPTION_HASH_FORMAT = '\n\n========================\nHash: {hash}'
     LAST_OCCURRENCE_FORMAT = '\nLast Occurrence: {occurrence} UTC'
 
-    def __init__(self, alert_id, description, issue_type='Defect', issue_component=None, alert_name=None, labels=None):
+    def __init__(self, alert_id, description, issue_type='Defect', issue_component=None,
+                 alert_name=None, labels=None):
         """ Set up the jira issue """
         self._alert_id = alert_id
         self._description = description
@@ -18,7 +19,8 @@ class Issue:
         }
         self._issue_component = issue_component
         self._alert_name = alert_name
-        self._issue_hash = self._create_hash(self.get_summary())
+        self._issue_hash = self._create_hash(
+            self.get_summary() + self._description.strip().split()[0])
         self._labels = ["KapacitorAlert"]
         if labels is not None:
             self._labels += labels
