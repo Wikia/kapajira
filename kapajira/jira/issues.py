@@ -1,4 +1,5 @@
 import hashlib
+import re
 
 from datetime import datetime
 
@@ -8,6 +9,7 @@ class Issue:
 
     DESCRIPTION_HASH_FORMAT = '\n\n========================\nHash: {hash}'
     LAST_OCCURRENCE_FORMAT = '\nLast Occurrence: {occurrence} UTC'
+    service_data_re = re.compile("/([-\w]+\/)/")
 
     def __init__(self, alert_id, description, issue_type='Defect', issue_component=None,
                  alert_name=None, labels=None):
@@ -20,7 +22,7 @@ class Issue:
         self._issue_component = issue_component
         self._alert_name = alert_name
         self._issue_hash = self._create_hash(
-            self.get_summary() + self._description.strip().split()[0])
+            self.get_summary() + self._get_service_id(self._description))
         self._labels = ["KapacitorAlert"]
         if labels is not None:
             self._labels += labels
@@ -30,6 +32,13 @@ class Issue:
         md5 = hashlib.md5()
         md5.update(data_to_hash.encode())
         return md5.hexdigest()
+
+    @staticmethod
+    def _get_service_id(description):
+        main_line = description.strip().split()[0]
+        # filter out anything that looks similar to k8s instance name
+        filtered = [n for n in main_line.split("/") if not re.match(r'[-\w]+-\w{10}-\w{5}', n)]
+        return "-".join(filtered)
 
     def get_issue_type(self):
         """ Get jira issue type for this issue """

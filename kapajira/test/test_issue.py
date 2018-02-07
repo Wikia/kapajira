@@ -14,3 +14,25 @@ class TestIssue(unittest.TestCase):
 
         self.assertNotEqual(first.get_issue_hash(), second.get_issue_hash(),
                             "Hash should be different for different services")
+
+    def test_multiple_instances_hash(self):
+        first = Issue("HTTP_RESPONSE_5XX_RATE_BATCH/Pandora", "HTTP_RESPONSE_5XX_RATE_BATCH/sjc/static-assets/static-assets-7b497d78f8-4fdbx \
+        The error rate (5xx responses) was above 0.05 at 0.20705882352941177 in the last 5m. \
+        https://metrics.wikia-inc.com/dashboard/db/services-prod?var-serviceName=static-assets&var-resourceName=All&var-datacenter=sjc")
+        second = Issue("HTTP_RESPONSE_5XX_RATE_BATCH/Pandora", "HTTP_RESPONSE_5XX_RATE_BATCH/sjc/static-assets/static-assets-7b497d78f8-5ndad \
+        The error rate (5xx responses) was above 0.05 at 0.21 in the last 5m. \
+        https://metrics.wikia-inc.com/dashboard/db/services-prod?var-serviceName=static-assets&var-resourceName=All&var-datacenter=sjc")
+
+        self.assertEqual(first.get_issue_hash(), second.get_issue_hash(),
+                         "Hash should be the same for different instances of the same service")
+
+    def test_no_instance_hash(self):
+        first = Issue("TRAEFIK_APDEX/Pandora", "TRAEFIK_APDEX/kube-sjc-prod/clickstream/clickstream \
+        Apdex value 0.9876237623762376 below configured threshold: 0.99 \
+        Find out more: https://metrics.wikia-inc.com/dashboard/db/traefik-apdex")
+        second = Issue("TRAEFIK_APDEX/Pandora", "TRAEFIK_APDEX/kube-sjc-prod/clickstream/clickstream \
+        Apdex value 0.9976237623762376 below configured threshold: 0.99 \
+        Find out more: https://metrics.wikia-inc.com/dashboard/db/traefik-apdex")
+
+        self.assertEqual(first.get_issue_hash(), second.get_issue_hash(),
+                         "Hash should be the same for the same service")
